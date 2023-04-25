@@ -45,6 +45,11 @@ public class TitleServiceImpl implements TitleService {
         return getTitleDto(saveTitle);
     }
 
+    /**
+     * Gets a title from the database.
+     * @param titleUrl the title to be retrieved.
+     * @throws if the title does not exist.
+     * @return the retrieved title. */
     @SneakyThrows
     @Override
     public TitleDto getTitle(String titleUrl) {
@@ -54,11 +59,7 @@ public class TitleServiceImpl implements TitleService {
         final String faviconUrl = getHref(document, titleUrl);
 
         // set the favicon and title to the DTO object
-        TitleDto titleDto = webClient.get()
-                .uri(faviconUrl)
-                .retrieve().
-                bodyToMono(TitleDto.class).block();
-
+        TitleDto titleDto = new TitleDto();
         titleDto.setFaviconUrl(faviconUrl);
         titleDto.setUrl(titleUrl);
         titleDto.setTitle(urlTitle);
@@ -68,7 +69,21 @@ public class TitleServiceImpl implements TitleService {
         if (titleExists != null) {
             return getTitleDto(titleExists);
         }
+
+        titleDto.setFaviconUrl(faviconUrl);
+        titleDto.setUrl(titleUrl);
+        titleDto.setTitle(urlTitle);
+
         return titleDto;
+    }
+
+    /**
+     * Gets all titles from the database.
+     * @return a list of all titles.
+     */
+    @Override
+    public List<TitleDto> getAllTitles() {
+        return titleRepository.findAll().stream().map(this::getTitleDto).toList();
     }
 
     /** Gets the favicon url from the document.
@@ -85,15 +100,6 @@ public class TitleServiceImpl implements TitleService {
             faviconUrl = url + "/favicon.ico";
         }
         return faviconUrl;
-    }
-
-    /**
-     * Gets all titles from the database.
-     * @return a list of all titles.
-     */
-    @Override
-    public List<TitleDto> getAllTitles() {
-        return null;
     }
 
     /**
