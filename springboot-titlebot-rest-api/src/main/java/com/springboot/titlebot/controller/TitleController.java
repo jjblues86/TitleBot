@@ -1,5 +1,6 @@
 package com.springboot.titlebot.controller;
 
+import com.springboot.titlebot.dto.HistoryUrlDto;
 import com.springboot.titlebot.dto.TitleDto;
 import com.springboot.titlebot.service.TitleService;
 import lombok.AllArgsConstructor;
@@ -27,16 +28,31 @@ public class TitleController {
      */
     @PostMapping
     public ResponseEntity<TitleDto> saveTitle(@RequestBody final TitleDto titleDto) {
-        TitleDto savedTitle = titleService.saveTitleUrl(titleDto.getUrl());
+        TitleDto savedTitle = titleService.saveTitleUrl(titleDto.getUrl(), titleDto.getUserId());
 
         return new ResponseEntity<>(savedTitle, HttpStatus.CREATED);
     }
-
 
     /** Get all titles. */
     @GetMapping("/titles")
     public ResponseEntity<List<TitleDto>> getAllTitles() {
         List<TitleDto> titles = titleService.getAllTitles();
+
+        return new ResponseEntity<>(titles, HttpStatus.OK);
+    }
+
+    /** Get all urls. */
+    @GetMapping("/urls")
+    public ResponseEntity<List<HistoryUrlDto>> getAllUrls() {
+
+        List<HistoryUrlDto> urls = titleService.getUrlHistory();
+
+        return new ResponseEntity<>(urls, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<TitleDto>> getTitlesByUser(@PathVariable String userId) {
+        List<TitleDto> titles = titleService.getTitlesByUser(userId);
 
         return new ResponseEntity<>(titles, HttpStatus.OK);
     }

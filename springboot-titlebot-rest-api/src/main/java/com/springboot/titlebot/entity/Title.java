@@ -20,4 +20,7 @@ public class Title {
     @NonNull
     @Column(name = "url")
     private String url;
+    @NonNull
+    @Column(name = "user_id")
+    private String userId;
 }

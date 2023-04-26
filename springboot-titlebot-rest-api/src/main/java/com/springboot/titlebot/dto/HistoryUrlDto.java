@@ -9,10 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TitleDto {
+public class HistoryUrlDto {
     private Long id;
-    private String faviconUrl;
     private String title;
     private String url;
-    private String userId;
 }

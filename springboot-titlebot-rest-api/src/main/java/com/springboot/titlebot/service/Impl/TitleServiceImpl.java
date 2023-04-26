@@ -1,5 +1,6 @@
 package com.springboot.titlebot.service.Impl;
 
+import com.springboot.titlebot.dto.HistoryUrlDto;
 import com.springboot.titlebot.dto.TitleDto;
 import com.springboot.titlebot.entity.Title;
 import com.springboot.titlebot.repository.TitleRepository;
@@ -9,12 +10,12 @@ import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** The implementation of the {@link TitleService} interface, providing methods to manage Title entities. */
 
@@ -26,17 +27,18 @@ public class TitleServiceImpl implements TitleService {
     private final TitleRepository titleRepository;
     /** The {@link ModelMapper} instance for mapping DTOs to entities. */
     private ModelMapper mapper;
-    /** The {@link WebClient} instance for HTTP requests. */
-    private WebClient webClient;
 
     /**
      * Gets a title from the database.
+     *
      * @param titleUrl the title to be retrieved.
+     * @param userId
+     * @return the retrieved title.
      * @throws if the title does not exist.
-     * @return the retrieved title. */
+     */
     @SneakyThrows
     @Override
-    public TitleDto saveTitleUrl(String titleUrl) {
+    public TitleDto saveTitleUrl(String titleUrl, String userId) {
         // get the document from the url and parse it to a document object for further operations
         Document document = Jsoup.connect(titleUrl).get();
         final String urlTitle = document.title();
@@ -47,6 +49,12 @@ public class TitleServiceImpl implements TitleService {
         titleDto.setFaviconUrl(faviconUrl);
         titleDto.setUrl(titleUrl);
         titleDto.setTitle(urlTitle);
+        titleDto.setUserId(userId);
+
+        // check if the favicon url is valid
+        if (!titleDto.getFaviconUrl().startsWith("http")) {
+            titleDto.setFaviconUrl(titleUrl + "/favicon.ico");
+        }
 
         // check if the title already exists in the database
         final Title titleExists = titleRepository.findByTitle(urlTitle);
@@ -66,6 +74,33 @@ public class TitleServiceImpl implements TitleService {
     @Override
     public List<TitleDto> getAllTitles() {
         return titleRepository.findAll().stream().map(this::getTitleDto).toList();
+    }
+
+    /**
+     * Gets all urls from the database.
+     *
+     * @return a list of all urls.
+     */
+    @Override
+    public List<HistoryUrlDto> getUrlHistory() {
+
+        List<Title> titles = titleRepository.findAll();
+
+        return titles.stream().map(this::getHistoryUrlDto).collect(Collectors.toList());
+    }
+
+    /**
+     * Gets all titles from the database.
+     * @param userId the user id from the request.
+     * @return a list of all titles. */
+    @Override
+    public List<TitleDto> getTitlesByUser(String userId) {
+        List<Title> titles = titleRepository.findByUserId(userId);
+        List<TitleDto> titleDtos = new ArrayList<>();
+        for (Title title : titles) {
+            titleDtos.add(getTitleDto(title));
+        }
+        return titleDtos;
     }
 
     /** Gets the favicon url from the document.
@@ -100,5 +135,9 @@ public class TitleServiceImpl implements TitleService {
      */
     private Title getTitle(TitleDto titleDto) {
         return mapper.map(titleDto, Title.class);
+    }
+
+    private HistoryUrlDto getHistoryUrlDto(Title title) {
+        return mapper.map(title, HistoryUrlDto.class);
     }
 }
