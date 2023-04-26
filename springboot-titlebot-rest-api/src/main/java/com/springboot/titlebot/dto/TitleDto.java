@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TitleDto {
     private Long id;
-    private String description;
     private String faviconUrl;
     private String title;
     private String url;

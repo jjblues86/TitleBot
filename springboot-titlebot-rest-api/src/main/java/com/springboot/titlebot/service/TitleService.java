@@ -8,7 +8,6 @@ import java.util.List;
  * Interface for TitleService
  */
 public interface TitleService {
-    TitleDto saveTitle(TitleDto titleDto);
-    TitleDto getTitle(String titleUrl);
+    TitleDto saveTitleUrl(String titleUrl);
     List<TitleDto> getAllTitles();
 }

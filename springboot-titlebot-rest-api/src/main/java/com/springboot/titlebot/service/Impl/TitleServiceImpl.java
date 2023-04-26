@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,34 +30,17 @@ public class TitleServiceImpl implements TitleService {
     private WebClient webClient;
 
     /**
-     * Saves a title to the database.
-     * @param titleDto the title to be saved.
-     * @return the saved title.
-     */
-    @SneakyThrows
-    @Override
-    public TitleDto saveTitle(TitleDto titleDto) {
-        //convert DTO to entity
-        final Title title = getTitle(titleDto);
-
-        // convert entity to DTO
-        final Title saveTitle = titleRepository.save(title);
-
-        return getTitleDto(saveTitle);
-    }
-
-    /**
      * Gets a title from the database.
      * @param titleUrl the title to be retrieved.
      * @throws if the title does not exist.
      * @return the retrieved title. */
     @SneakyThrows
     @Override
-    public TitleDto getTitle(String titleUrl) {
+    public TitleDto saveTitleUrl(String titleUrl) {
         // get the document from the url and parse it to a document object for further operations
         Document document = Jsoup.connect(titleUrl).get();
         final String urlTitle = document.title();
-        final String faviconUrl = getHref(document, titleUrl);
+        final String faviconUrl = getFaviconUrl(document, titleUrl);
 
         // set the favicon and title to the DTO object
         TitleDto titleDto = new TitleDto();
@@ -70,11 +54,9 @@ public class TitleServiceImpl implements TitleService {
             return getTitleDto(titleExists);
         }
 
-        titleDto.setFaviconUrl(faviconUrl);
-        titleDto.setUrl(titleUrl);
-        titleDto.setTitle(urlTitle);
+        final Title savedTitle = titleRepository.save(getTitle(titleDto));
 
-        return titleDto;
+        return getTitleDto(savedTitle);
     }
 
     /**
@@ -91,7 +73,7 @@ public class TitleServiceImpl implements TitleService {
      * @param url the url of the document.
      * @return the favicon url.
      */
-    private static String getHref(final Document document, final String url) {
+    private static String getFaviconUrl(final Document document, final String url) {
         String faviconUrl = "";
         Element link = document.select("link[href~=.*\\.(ico|png)]").first();
         if (link != null) {

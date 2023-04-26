@@ -1,7 +1,6 @@
 package com.springboot.titlebot.controller;
 
 import com.springboot.titlebot.dto.TitleDto;
-import com.springboot.titlebot.entity.Title;
 import com.springboot.titlebot.service.TitleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/title")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TitleController {
 
     /**
@@ -27,24 +27,14 @@ public class TitleController {
      */
     @PostMapping
     public ResponseEntity<TitleDto> saveTitle(@RequestBody final TitleDto titleDto) {
-        TitleDto savedTitle = titleService.saveTitle(titleDto);
+        TitleDto savedTitle = titleService.saveTitleUrl(titleDto.getUrl());
 
         return new ResponseEntity<>(savedTitle, HttpStatus.CREATED);
     }
 
-    /** Get title.
-     * @param url the url.
-     * @return title.
-     */
-    @GetMapping
-    public ResponseEntity<TitleDto> getTitle(@RequestParam final String url) {
-        TitleDto title = titleService.getTitle(url);
-
-        return new ResponseEntity<>(title, HttpStatus.OK);
-    }
 
     /** Get all titles. */
-    @GetMapping("/api/titles")
+    @GetMapping("/titles")
     public ResponseEntity<List<TitleDto>> getAllTitles() {
         List<TitleDto> titles = titleService.getAllTitles();
 
