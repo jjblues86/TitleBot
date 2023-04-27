@@ -62,6 +62,7 @@ public class TitleServiceImpl implements TitleService {
             return getTitleDto(titleExists);
         }
 
+        // save the title to the database and return the saved title to the client in the response
         final Title savedTitle = titleRepository.save(getTitle(titleDto));
 
         return getTitleDto(savedTitle);
@@ -102,6 +103,17 @@ public class TitleServiceImpl implements TitleService {
         return titleDtos;
     }
 
+    /** Deletes a title from the database.
+     * @param titleId the title id from the request.
+     * @throws if the title does not exist.
+     */
+    @Override
+    public void deleteTitleById(final Long titleId) {
+        // delete the title from the database by its id
+        final Title title = titleRepository.findById(titleId).orElseThrow(() -> new RuntimeException("Title not found"));
+        titleRepository.deleteById(title.getId());
+    }
+
     /** Gets the favicon url from the document.
      * @param document the document to be parsed.
      * @param url the url of the document.
@@ -109,6 +121,7 @@ public class TitleServiceImpl implements TitleService {
      */
     private static String getFaviconUrl(final Document document, final String url) {
         String faviconUrl = "";
+        // get the favicon url from the document object and return it to the client in the response if it exists
         Element link = document.select("link[href~=.*\\.(ico|png)]").first();
         if (link != null) {
             faviconUrl = link.attr("href");

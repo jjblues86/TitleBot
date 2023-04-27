@@ -13,4 +13,5 @@ public interface TitleService {
     List<TitleDto> getAllTitles();
     List<HistoryUrlDto> getUrlHistory();
     List<TitleDto> getTitlesByUser(String userId);
+    void deleteTitleById(Long titleId);
 }

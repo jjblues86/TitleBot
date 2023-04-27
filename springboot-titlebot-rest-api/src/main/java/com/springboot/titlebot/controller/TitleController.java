@@ -50,10 +50,19 @@ public class TitleController {
         return new ResponseEntity<>(urls, HttpStatus.OK);
     }
 
+    /** Get titles by user. */
     @GetMapping("/{userId}")
-    public ResponseEntity<List<TitleDto>> getTitlesByUser(@PathVariable String userId) {
+    public ResponseEntity<List<TitleDto>> getTitlesByUser(@PathVariable("userId") String userId) {
         List<TitleDto> titles = titleService.getTitlesByUser(userId);
 
         return new ResponseEntity<>(titles, HttpStatus.OK);
+    }
+
+    /** Delete title by id. */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteTitleById(@PathVariable("id") Long userId) {
+        titleService.deleteTitleById(userId);
+
+        return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 }

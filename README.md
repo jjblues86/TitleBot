@@ -16,6 +16,7 @@
 - /getTitlesByUser
 - /getAllUrls
 - /getAllTitles
+- /deleteTitleById
 
 # How to set up and run the application
  - Install Docker on your computer if it is not already installed. You can download it from the official website: https://www.docker.com/products/docker-desktop.

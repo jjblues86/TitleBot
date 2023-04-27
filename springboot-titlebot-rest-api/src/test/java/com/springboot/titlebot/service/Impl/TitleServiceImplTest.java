@@ -88,4 +88,34 @@ class TitleServiceImplTest {
         verify(titleRepository, never()).findByTitle(anyString());
         verify(titleRepository, never()).findByUserId(anyString());
     }
+
+    @Test
+    public void deleteTitleById_TitleExists_ShouldDeleteTitle() {
+        // Arrange
+        final Long titleId = 1L;
+        final Title title = new Title();
+        title.setId(titleId);
+
+        // Act
+        when(titleRepository.findById(titleId)).thenReturn(java.util.Optional.of(title));
+
+        titleService.deleteTitleById(titleId);
+
+        // Assert
+        verify(titleRepository, times(1)).deleteById(titleId);
+    }
+
+    @Test
+    public void deleteTitleById_TitleDoesNotExist_ShouldThrowException() {
+        // Arrange
+        final Long titleId = 1L;
+
+        // Act
+        when(titleRepository.findById(titleId)).thenReturn(java.util.Optional.empty());
+
+        // Assert
+        assertThrows(RuntimeException.class, () -> titleService.deleteTitleById(titleId));
+
+        verify(titleRepository, never()).deleteById(titleId);
+    }
 }

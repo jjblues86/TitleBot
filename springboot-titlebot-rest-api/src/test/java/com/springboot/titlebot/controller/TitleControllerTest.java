@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 class TitleControllerTest {
@@ -117,5 +118,20 @@ class TitleControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(titles, responseEntity.getBody());
+    }
+
+    @Test
+    void testDeleteTitleById() {
+        // Arrange
+        Long userId = 1L;
+        doNothing().when(titleService).deleteTitleById(userId);
+
+        // Act
+        TitleController titleController = new TitleController(titleService);
+        ResponseEntity<Long> response = titleController.deleteTitleById(userId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(userId, response.getBody());
     }
 }
