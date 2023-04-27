@@ -1,7 +1,6 @@
 import './App.css';
 import TitleBotComponent from './component/TitleBotComponent';
-import UrlContext from './component/UrlContext';
-// import UrlListComponent from './component/UrlListComponent';
+import UrlContext from './context/UrlContext';
 import { useState } from 'react';
 
 function App() {
@@ -16,7 +15,6 @@ function App() {
     <div className="App">
       <UrlContext.Provider value={{ urls, addUrl }}>
         <TitleBotComponent />
-        {/* <UrlListComponent /> */}
       </UrlContext.Provider>
     </div>
   );

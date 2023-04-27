@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Form, Button, Table } from 'react-bootstrap';
-import UrlContext from './UrlContext';
+import UrlContext from '../context/UrlContext';
 
 function TitleBotComponent() {
   const [url, setUrl] = useState('');

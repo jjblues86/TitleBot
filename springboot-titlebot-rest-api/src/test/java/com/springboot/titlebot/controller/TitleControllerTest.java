@@ -1,5 +1,6 @@
 package com.springboot.titlebot.controller;
 
+import com.springboot.titlebot.dto.HistoryUrlDto;
 import com.springboot.titlebot.dto.TitleDto;
 import com.springboot.titlebot.service.TitleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +36,7 @@ class TitleControllerTest {
 
     @Test
     void saveTitle_shouldReturnSavedTitle() {
-        // given
+        // Arrange
         TitleDto titleDto = new TitleDto();
         titleDto.setUrl("https://example.com");
         titleDto.setUserId("user1");
@@ -46,17 +47,17 @@ class TitleControllerTest {
         when(titleService.saveTitleUrl(any(String.class), any(String.class))).thenReturn(savedTitle);
         when(httpServletRequest.getHeader("user-id")).thenReturn("user1");
 
-        // when
+        // Act
         ResponseEntity<TitleDto> responseEntity = titleController.saveTitle(titleDto);
 
-        // then
+        // Assert
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(savedTitle, responseEntity.getBody());
     }
 
     @Test
     void getAllTitles_shouldReturnAllTitles() {
-        // given
+        // Arrange
         List<TitleDto> titles = new ArrayList<>();
         TitleDto title1 = new TitleDto();
         title1.setId(1L);
@@ -69,34 +70,34 @@ class TitleControllerTest {
 
         when(titleService.getAllTitles()).thenReturn(titles);
 
-        // when
+        // Act
         ResponseEntity<List<TitleDto>> responseEntity = titleController.getAllTitles();
 
-        // then
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(titles, responseEntity.getBody());
     }
 
-//    @Test
-//    void getAllUrls_shouldReturnAllUrls() {
-//        // given
-//        List<String> urls = new ArrayList<>();
-//        urls.add("https://example1.com");
-//        urls.add("https://example2.com");
-//
-//        when(titleService.getUrlHistory()).thenReturn(urls);
-//
-//        // when
-//        ResponseEntity<List<String>> responseEntity = titleController.getAllUrls();
-//
-//        // then
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertEquals(urls, responseEntity.getBody());
-//    }
+    @Test
+    void getAllUrls_shouldReturnAllUrls() {
+        // Arrange
+        List<HistoryUrlDto> urls = new ArrayList<>();
+        urls.add(new HistoryUrlDto());
+        urls.add(new HistoryUrlDto());
+
+        when(titleService.getUrlHistory()).thenReturn(urls);
+
+        // Act
+        ResponseEntity<List<HistoryUrlDto>> responseEntity = titleController.getAllUrls();
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(urls, responseEntity.getBody());
+    }
 
     @Test
     void getTitlesByUser_shouldReturnTitlesByUser() {
-        // given
+        // Arrange
         String userId = "user1";
         List<TitleDto> titles = new ArrayList<>();
         TitleDto title1 = new TitleDto();
@@ -110,10 +111,10 @@ class TitleControllerTest {
 
         when(titleService.getTitlesByUser(userId)).thenReturn(titles);
 
-        // when
+        // Act
         ResponseEntity<List<TitleDto>> responseEntity = titleController.getTitlesByUser(userId);
 
-        // then
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(titles, responseEntity.getBody());
     }

@@ -78,7 +78,6 @@ public class TitleServiceImpl implements TitleService {
 
     /**
      * Gets all urls from the database.
-     *
      * @return a list of all urls.
      */
     @Override
@@ -137,6 +136,10 @@ public class TitleServiceImpl implements TitleService {
         return mapper.map(titleDto, Title.class);
     }
 
+    /** Gets a title from the database.
+     * @param title the title to be retrieved.
+     * @return the retrieved title.
+     */
     private HistoryUrlDto getHistoryUrlDto(Title title) {
         return mapper.map(title, HistoryUrlDto.class);
     }
