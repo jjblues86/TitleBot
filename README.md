@@ -2,7 +2,7 @@
 
 # Project Description
  - Create a web form that allows a user to type in a url to any website and have it then output the Title and favicon of that website on the same page.
- - This project was built using springboot for the java backend service and react for the frontend clint code. The database in use is mysql to store data.
+ - This project was built using springboot for the java backend service and react for the frontend client service. The database in use is mysql to store data.
 
 # Requirements
  - Use React for the front end
