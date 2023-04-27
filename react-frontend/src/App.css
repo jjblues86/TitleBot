@@ -19,6 +19,10 @@
   color: white;
 }
 
+nav {
+  background-color: #a2d6ee;
+}
+
 
 @keyframes App-logo-spin {
   from {

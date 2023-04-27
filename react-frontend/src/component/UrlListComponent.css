@@ -34,5 +34,10 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
+  h3 {
+    padding-top: '30px'
+  }
+  
   
   
